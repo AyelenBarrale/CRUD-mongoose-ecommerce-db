@@ -1,0 +1,26 @@
+{
+  "name": "entrega-2-projfinal-barrale",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --inspect ./src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.1",
+    "mongoose": "^6.0.7",
+    "node-emoji": "^1.11.0",
+    "node-uuid": "^1.4.8"
+  }
+}
