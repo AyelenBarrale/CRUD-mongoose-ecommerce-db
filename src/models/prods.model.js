@@ -29,7 +29,10 @@ const prodSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+  },
+  {
+    collection: "productos",
   }
 );
 
-export default mongoose.model("Productos", prodSchema);
+export default mongoose.model("producto", prodSchema);

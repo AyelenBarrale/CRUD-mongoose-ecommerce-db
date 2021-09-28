@@ -9,34 +9,6 @@ export async function createCart(data) {
   }
 }
 
-export async function deleteCart(id) {
-  try {
-    await cartsModel.default.findOneAndDelete(id);
-    return;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
-export async function postProdsCart(cartId, productId) {
-  try {
-    const cart = await cartsModel.default.findOne(cartId);
-    if (!cart) throw new Error("Carrito inexistente");
-
-    const producto = await prodsModel.default.findOne({ productId });
-
-    if (!cart?.cartProducts?.includes(producto)) {
-      cart.cartProducts.push(producto);
-    } else {
-      throw new Error("Este producto ya esta incluído en tu carrito");
-    }
-    await cart.save();
-    return cart;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
 export async function getCart(cartId) {
   try {
     const cart = await cartsModel.default.findOne(cartId);
@@ -47,22 +19,48 @@ export async function getCart(cartId) {
   }
 }
 
-export async function deleteProductCart(cartId, productId) {
+export async function deleteCart(id) {
   try {
-    const cart = await cartsModel.default.findOne({ cartId });
-    console.log(cart)
+    const deletedCart = await cartsModel.default.findOneAndDelete(id);
+    return deletedCart;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function postProdsCart(cartId, productId) {
+  try {
+    const cart = await getCart(cartId);
     if (!cart) throw new Error("Carrito inexistente");
 
     const producto = await prodsModel.default.findOne({ productId });
-    console.log(producto)
+
+    if (!cart?.cartProducts?.includes(producto)) {
+      cart.cartProducts.push(producto);
+    } else {
+      throw new Error("Este producto ya esta incluido en tu carrito");
+    }
+    await cart.save();
+    return cart;
+    
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function deleteProductCart(cartId, productId) {
+  try {
+    let cart = await getCart(cartId);
+    if (!cart) throw new Error("Carrito inexistente");
+
+    const producto = prodsModel.default.findOne({ productId });
 
     if (cart?.cartProducts?.includes(producto)) {
-      cart.cartProducts.deleteOne(producto);
-    } 
+      cart.cartProducts.deleteMany(producto);
+    }
     await cart.save();
     return cart;
   } catch (error) {
     throw new Error(error);
   }
 }
-
