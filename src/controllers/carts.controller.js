@@ -1,20 +1,22 @@
-import { cartsService } from "../services/index.js";
+import Carrito from "../models/carts.model.js";
+import Producto from "../models/prods.model.js";
 
 export async function createCart(req, res) {
-  const { body } = req;
+  const { userName } = req.body;
   try {
-    const cart = await cartsService.createCart(body);
-    res.status(200).json(cart.id);
+    const newCarrito = new Carrito({ userName });
+    await newCarrito.save();
+    res.status(200).json(newCarrito.id);
   } catch (error) {
     res.status(400).send(error.message);
   }
 }
 
 export async function getCart(req, res) {
-  const { cartId } = req.params;
+  const { id } = req.params;
   try {
-    const cart = await cartsService.getCart(cartId);
-    res.status(200).json({ cart });
+    const carrito = await Carrito.findById(id);
+    res.status(200).json({ carrito });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -23,7 +25,7 @@ export async function getCart(req, res) {
 export async function deleteCart(req, res) {
   const { id } = req.params;
   try {
-    const deletedCart = await cartsService.deleteCart(id);
+    const deletedCart = await Carrito.findByIdAndDelete(id);
     res.status(200).json({ deletedCart });
   } catch (error) {
     res.status(400).send(error.message);
@@ -31,25 +33,47 @@ export async function deleteCart(req, res) {
 }
 
 export async function postProdsCart(req, res) {
-  const {cartId} = req.params;
-  const {productId} = req.body;
+  const { id } = req.params;
+  const prodId = { _id: req.body.id };
   try {
-    const updatedCart = await cartsService.postProdsCart(cartId, productId);
-    //res.status(200).send("Producto añadido");
-    res.status(200).json(updatedCart)
+    let carrito = await Carrito.findById(id);
+    //console.log(carrito);
+
+    const producto = await Producto.findById(prodId);
+    //console.log(producto);
+
+    if (!carrito?.productos?.includes(producto)) {
+      carrito.productos.push(producto);
+      await carrito.save();
+    }
+
+    res.status(200).json({ carrito });
   } catch (error) {
     res.status(400).send(error.message);
   }
 }
-
 
 export async function deleteProductCart(req, res) {
   const cartId = { _id: req.params.id };
   const productId = { _id: req.params.id_prod };
 
   try {
-    await cartsService.deleteProductCart(cartId, productId);
-    res.status(200).send("Producto eliminado");
+    let carrito = await Carrito.findById(cartId);
+    //console.log(carrito);
+
+    const producto = await Producto.findById(productId);
+    //console.log(producto);
+
+    if (carrito?.productos?.includes(producto)) {
+      const updatedCartItems = await carrito.productos.filter(
+        (producto) => producto.id !== productId
+      );
+      carrito.productos = updatedCartItems;
+      await carrito.save();
+    }
+
+    res.status(200).json({ carrito });
+    //res.status(200).send("Producto eliminado");
   } catch (error) {
     res.status(400).send(error.message);
   }

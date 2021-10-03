@@ -6,7 +6,7 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGOURI, (err) => {
   if (!err) {
-    console.log(emoji.get("fire"), "Conectado a base de datos");
+    console.log(emoji.get("fire"), "Mongodb is connected to database");
   } else {
     console.log(err);
   }

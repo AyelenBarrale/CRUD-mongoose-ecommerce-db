@@ -1,24 +1,22 @@
 import mongoose from "mongoose";
 
-let cartItem = new mongoose.Schema(
-  {
-    productId: {
-      ref: "producto",
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+const Schema = mongoose.Schema;
 
-const cartSchema = new mongoose.Schema(
+const carritoSchema = new Schema(
   {
     userName: {
       type: String,
-      require: true,
+      required: true
     },
-    cartProducts: [cartItem],
+    productos: [{
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product"/* ,
+          quantity: {
+            type: Number,
+          } */
+        }
+      }],
     modifiedOn: {
       type: Date,
       default: Date.now,
@@ -26,11 +24,11 @@ const cartSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
-  {
-    collection: "carritos",
   }
 );
 
 
-export default mongoose.model("carrito", cartSchema);
+export default mongoose.model("Carrito", carritoSchema);
+
+
+

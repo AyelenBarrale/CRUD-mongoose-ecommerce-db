@@ -12,4 +12,4 @@ router.post("/", /* isAdmin, */ prodsController.createProduct);
 router.put("/:id", /* isAdmin, */ prodsController.updateProduct);
 router.delete("/:id", /* isAdmin, */ prodsController.deleteProduct);
 
-export { router  };
+export { router };
