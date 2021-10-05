@@ -28,7 +28,7 @@ const carritoSchema = new Schema(
 );
 
 
-export default mongoose.model("Carrito", carritoSchema);
+export const Carrito = mongoose.model("Carrito", carritoSchema);
 
 
 

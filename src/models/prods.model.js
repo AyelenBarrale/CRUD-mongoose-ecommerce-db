@@ -27,15 +27,11 @@ const productoSchema = new Schema(
     stock: {
       type: Number,
       required: true,
-    }/* ,
-    cartId: {
-      type: Schema.Types.ObjectId,
-      ref: "Carrito",
-    }, */
+    }
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model("Producto", productoSchema);
+export const Producto = mongoose.model("Producto", productoSchema);

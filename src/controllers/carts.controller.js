@@ -1,5 +1,5 @@
-import Carrito from "../models/carts.model.js";
-import Producto from "../models/prods.model.js";
+import {Carrito} from "../models/carts.model.js";
+import {Producto} from "../models/prods.model.js";
 
 export async function createCart(req, res) {
   const { userName } = req.body;
@@ -64,16 +64,17 @@ export async function deleteProductCart(req, res) {
     const producto = await Producto.findById(productId);
     //console.log(producto);
 
-    if (carrito?.productos?.includes(producto)) {
+    if (carrito.productos.includes(producto)) {
       const updatedCartItems = await carrito.productos.filter(
         (producto) => producto.id !== productId
       );
       carrito.productos = updatedCartItems;
       await carrito.save();
-    }
 
-    res.status(200).json({ carrito });
-    //res.status(200).send("Producto eliminado");
+      res.status(200).json({ carrito });
+    } else {
+      res.status(400).send('el producto no se encuentra en el carrito')
+    }
   } catch (error) {
     res.status(400).send(error.message);
   }
