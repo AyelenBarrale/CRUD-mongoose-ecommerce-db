@@ -1,5 +1,5 @@
-import {Carrito} from "../models/carts.model.js";
-import {Producto} from "../models/prods.model.js";
+import { Carrito } from "../models/carts.model.js";
+import { Producto } from "../models/prods.model.js";
 
 export async function createCart(req, res) {
   const { userName } = req.body;
@@ -54,27 +54,26 @@ export async function postProdsCart(req, res) {
 }
 
 export async function deleteProductCart(req, res) {
-  const cartId = { _id: req.params.id };
-  const productId = { _id: req.params.id_prod };
+  const cartId = req.params.id ;
+  const prodId = req.params.id_prod ;
 
   try {
-    let carrito = await Carrito.findById(cartId);
-    //console.log(carrito);
+    
+    const updateCart = await Carrito.findByIdAndUpdate(
+      {_id: cartId},
+      { $pull: { productos: {_id: prodId} } },
+      { new: true }
+    );
 
-    const producto = await Producto.findById(productId);
-    //console.log(producto);
-
-    if (carrito.productos.includes(producto)) {
-      const updatedCartItems = await carrito.productos.filter(
-        (producto) => producto.id !== productId
-      );
-      carrito.productos = updatedCartItems;
-      await carrito.save();
-
-      res.status(200).json({ carrito });
+    await updateCart.save;
+    console.log(updateCart);
+    if(!updateCart?.productos?.includes(prodId)) {
+      res.status(200).send("producto eliminado del carrito");
     } else {
       res.status(400).send('el producto no se encuentra en el carrito')
     }
+  
+
   } catch (error) {
     res.status(400).send(error.message);
   }
