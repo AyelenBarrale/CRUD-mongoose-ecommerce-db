@@ -1,1 +1,1 @@
-## incluyo en este repositorio el archivo .env para que pueda efecturarse las consultas y acceder a la base sin inconveniente.
+
